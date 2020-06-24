@@ -62,21 +62,31 @@ def fixDataLost(data2):
   keys.sort()
   dt = date(datetime.strptime(keys[0], fmt).year, 1, 1)
   end  = datetime.strptime(keys[len(keys)-1], fmt).date()
+  last = [-1, 0, 0, 0, 0]
   while dt < end:
     key = dt.strftime(fmt)
     if key in data2:
-      pass
+      if data2[key][1] == 0:
+        data2[key][1] = last[1]
+      if data2[key][2] == 0:
+        data2[key][2] = last[2]
+      if data2[key][3] == 0:
+        data2[key][3] = last[3]
+      if data2[key][4] == 0:
+        data2[key][4] = last[4]
+      last = data2[key]
     else:
-      data2[key] = [-1, 0, 0, 0, 0, "NO_DATA"]
+      data2[key] = last
+      data2[key][0] = -1
+
 
     dt = dt + timedelta(days=1)
-
 
 
 if __name__ == '__main__':
   with open('data.json') as f:
     '''
-    # data.json FORMAT
+    # INPUT data.json FORMAT
     {
       "水情信息": [上游水位, 下游水位, 三峡入库, 三峡出库, "时间"],
     }
@@ -87,12 +97,6 @@ if __name__ == '__main__':
   #for i in data:
   #  print("'" + i + "':" + str(data[i]))
   
-  '''
-  # data2.json FORMAT
-  {
-    "yyyy-mm-dd": [水情信息, 上游水位, 下游水位, 三峡入库, 三峡出库, "时间"],
-  }
-  '''
   data2 = {}
   fmt = '%Y-%m-%d'
 
@@ -101,6 +105,13 @@ if __name__ == '__main__':
   fixDataLost(data2)
   keys = list(data2.keys())
   keys.sort()
+
+  '''
+  # OUTPUT data2.json FORMAT
+  {
+    "yyyy-mm-dd": [水情信息回次, 上游水位, 下游水位, 三峡入库, 三峡出库],
+  }
+  '''
   with open('data2.json', 'w') as f:
     print(json.dumps(data2, sort_keys=True, indent=2), file=f)
 

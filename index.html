@@ -6,7 +6,34 @@
 </head>
 
 <body>
-  <div id="chart1"></div>
+  <section>
+    <header><h1>三峡水情数据(全期)</h1></header>
+    <div id="chart1"></div>
+    <footer><a href="http://tgpcanada.org/waterlist.aspx">数据来源</a>
+       <a href="https://izayoi5776.github.io/tgpcanada_org_waterlist_download/">数据发布</a>
+       <a href="https://github.com/izayoi5776/tgpcanada_org_waterlist_download">数据整形工具</a>
+    </footer>
+  </section>
+  <section>
+    <header><h1>上游水位(m)</h1></header>
+    <div id="chart2"></div>
+  </section>  
+  <section>
+    <header><h1>下游水位(m)</h1></header>
+    <div id="chart3"></div>
+  </section>  
+  <section>
+    <header><h1>三峡入库(m^3/s)</h1></header>
+    <div id="chart4"></div>
+  </section>  
+  <section>
+    <header><h1>三峡出库(m^3/s)</h1></header>
+    <div id="chart5"></div>
+  </section>
+  <section>
+    <header><h1>入库 - 出库(m^3/s)</h1></header>
+    <div id="chart6"></div>
+  </section>  
 </body>
 
 <!-- Load c3.css -->
@@ -16,52 +43,150 @@
 <script src="https://unpkg.com/c3"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-//const axios = require('axios');
+
 const chart1 = function(data){
   data0 = data[0].split(',')
-    data0.unshift('x');
-    data2 = data[2].split(',')
-    data2.unshift('上游水位(m)');
-    data3 = data[3].split(',')
-    data3.unshift('下游水位(m)');
-    data4 = data[4].split(',')
-    data4.unshift('三峡入库(m^3/s)');
-    data5 = data[5].split(',')
-    data5.unshift('三峡出库(m^3/s)');
+  data0.unshift('x');
+  data2 = data[2].split(',')
+  data2.unshift('上游水位(m)');
+  data3 = data[3].split(',')
+  data3.unshift('下游水位(m)');
+  data4 = data[4].split(',')
+  data4.unshift('三峡入库(m^3/s)');
+  data5 = data[5].split(',')
+  data5.unshift('三峡出库(m^3/s)');
 
-    var chart = c3.generate({
-      bindto: '#chart1',
-      data:{
-        x: 'x',
-        columns:[
-          data0,
-          data2,
-          data3,
-          data4,
-          data5
-        ],
-        //type: 'scatter'
+  var chart = c3.generate({
+    bindto: '#chart1',
+    data:{
+      x: 'x',
+      columns:[
+        data0,
+        data2,
+        data3,
+        data4,
+        data5
+      ],
+      axes: {
+        "上游水位(m)": 'y',
+        "下游水位(m)": 'y',
+        "三峡入库(m^3/s)": 'y2',
+        "三峡出库(m^3/s)": 'y2',
+        }
+      //type: 'scatter'
+    },
+    point: {
+      show: false
+    },
+    axis: {
+      x: {
+          type: 'timeseries',
+          tick:{
+            format: '%Y-%m-%d'
+          }
       },
-      point: {
-        show: false
+      y: {
+        max: 180,
+        min: 60
       },
-      axis: {
-        x: {
-            type: 'timeseries',
-            tick:{
-              format: '%Y-%m-%d'
-            }
+      y2: {
+            show: true
         }
     }
-    });
+  });
 };
+//const chart2 = function(data){
+const chartCommon = function(data, type, bind, ymin, ymax){
+  var flg = false;
+  if(type===99){
+    // means 入库 - 出库
+    type = 4;
+    flg = true;
+  }
+  // 2012，2016，2020 are leap year
+  data0 = data[0].split(',');
+  //x = data0.slice(0, 366).map(x => x.substr(5));
+  x = data0.slice(0, 366);
+  x.unshift('x');
+  dataN = data[type].split(',');
+  n = dataN.length;
+  if(flg){
+    dataN2 = data[5].split(',');
+  }
+  var chart = c3.generate({
+    bindto: bind,
+    data:{
+      x:'x',
+      columns: []
+    },
+    point: {
+      show: false
+    },
+    axis: {
+      x: {
+          type: 'timeseries',
+          tick: {
+              format: '%m-%d'
+          }
+      },
+      y: {
+        max: ymax,
+        min: ymin
+      }
+    }
+  });
+
+  chart.unload({
+      ids:['dummy']
+  });
+  for(var i=0, pos=0; pos<n;i++){
+    year = 2012 + i;
+    leap = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 1 : 0;
+    yearlen = 365+leap;
+    yeardata = dataN.slice(pos, pos+yearlen);
+    if(flg){
+      yeardata2 = dataN2.slice(pos, pos+yearlen);
+      for(var j=0; j<yearlen; j++){
+        yeardata[j] = yeardata[j] - yeardata2[j];
+      }
+    }
+    yeardata.unshift(String(year));
+    pos = pos + yearlen;
+
+    chart.load({
+      columns:[
+        x,
+        yeardata
+      ]
+    })
+
+  }
+};
+
+
+// ===================== MAIN =======================
 var data;
 axios.get('./data2.csv')
   .then(function (response) {
     // handle success
-    console.log(response);
+    //console.log(response);
     data = response.data.split('\n');
     chart1(data);
+    setTimeout(function () {
+      chartCommon(data, 2, '#chart2', 145, 180);
+    }, 100);
+    setTimeout(function () {
+      chartCommon(data, 3, '#chart3', 63, 73);
+    }, 200);
+    setTimeout(function () {
+      chartCommon(data, 4, '#chart4', 5000, 50000);
+    }, 300);
+    setTimeout(function () {
+      chartCommon(data, 5, '#chart5', 5000, 50000);
+    }, 400);
+    setTimeout(function () {
+      chartCommon(data, 99, '#chart6', -10000, 20000);
+    }, 500);
   })
   .catch(function (error) {
     // handle error
