@@ -1,7 +1,12 @@
-# tgpcanada_org_waterlist_download
-download tgpcanada.org/waterlist.aspx
+# Demo
+check [here](https://izayoi5776.github.io/tgpcanada_org_waterlist_download/) to view result online
 
-# install 
+
+
+# get data yourself
+
+If you want get data youself, 
+### install 
 
 ```
 pip3 install beautifulsoup4
@@ -50,7 +55,7 @@ fix date format, then you got `data2.json`, and `data2.csv`
 python3 04_cleardata.py
 ```
 
-### c3
+### use c3 to load and show 
 
 - json should use double quote
 

@@ -54,17 +54,51 @@ def fixDataBefore941(data, data2):
       print("skip i=" + str(i) + " ex=" + str(sys.exc_info()))
       pass
 
+def fixDataLost(data2):
+  '''
+  add lost date
+  '''
+  keys = list(data2.keys())
+  keys.sort()
+  dt = date(datetime.strptime(keys[0], fmt).year, 1, 1)
+  end  = datetime.strptime(keys[len(keys)-1], fmt).date()
+  while dt < end:
+    key = dt.strftime(fmt)
+    if key in data2:
+      pass
+    else:
+      data2[key] = [-1, 0, 0, 0, 0, "NO_DATA"]
+
+    dt = dt + timedelta(days=1)
+
+
+
 if __name__ == '__main__':
   with open('data.json') as f:
+    '''
+    # data.json FORMAT
+    {
+      "水情信息": [上游水位, 下游水位, 三峡入库, 三峡出库, "时间"],
+    }
+    '''
     data = json.load(f)
 
   #print(json.dumps(data))
   #for i in data:
   #  print("'" + i + "':" + str(data[i]))
   
+  '''
+  # data2.json FORMAT
+  {
+    "yyyy-mm-dd": [水情信息, 上游水位, 下游水位, 三峡入库, 三峡出库, "时间"],
+  }
+  '''
   data2 = {}
+  fmt = '%Y-%m-%d'
+
   fixDataAfter941(data, data2)
   fixDataBefore941(data, data2)
+  fixDataLost(data2)
   keys = list(data2.keys())
   keys.sort()
   with open('data2.json', 'w') as f:
