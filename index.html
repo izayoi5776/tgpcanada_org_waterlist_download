@@ -2,18 +2,74 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>TipsNote : GitHub Pages Sample</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/marx/2.0.4/marx.css">
+<title>三峡水量数据</title>
 </head>
 
 <body>
-<main>
-  <h1>GitHub Pages のサンプルです</h1>
-  <a href="http://yahoo.co.jp/"><button>TipsNote に戻る</button></a>
-</main>
-
-<script>
-console.log('GitHub Pages Sample');
-</script>
+  <div id="chart1"></div>
 </body>
+
+<!-- Load c3.css -->
+<link href="https://unpkg.com/c3@0.7.2/c3.min.css" rel="stylesheet">
+<!-- Load d3.js and c3.js -->
+<script src="https://unpkg.com/d3" charset="utf-8"></script>
+<script src="https://unpkg.com/c3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+//const axios = require('axios');
+const chart1 = function(data){
+  data0 = data[0].split(',')
+    data0.unshift('x');
+    data2 = data[2].split(',')
+    data2.unshift('上游水位(m)');
+    data3 = data[3].split(',')
+    data3.unshift('下游水位(m)');
+    data4 = data[4].split(',')
+    data4.unshift('三峡入库(m^3/s)');
+    data5 = data[5].split(',')
+    data5.unshift('三峡出库(m^3/s)');
+
+    var chart = c3.generate({
+      bindto: '#chart1',
+      data:{
+        x: 'x',
+        columns:[
+          data0,
+          data2,
+          data3,
+          data4,
+          data5
+        ],
+        //type: 'scatter'
+      },
+      point: {
+        show: false
+      },
+      axis: {
+        x: {
+            type: 'timeseries',
+            tick:{
+              format: '%Y-%m-%d'
+            }
+        }
+    }
+    });
+};
+var data;
+axios.get('/data2.csv')
+  .then(function (response) {
+    // handle success
+    console.log(response);
+    data = response.data.split('\n');
+    chart1(data);
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
+
+</script>
 </html>

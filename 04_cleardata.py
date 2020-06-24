@@ -74,7 +74,7 @@ if __name__ == '__main__':
     for i in keys:
       print(i + ",", end='', file=f)
     print('', file=f)
-    for i in range(0,4):
+    for i in range(0,5):
       for key in keys:
         print(str(data2[key][i]) + ',', end='', file=f)
       print('', file=f)
