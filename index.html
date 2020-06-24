@@ -19,6 +19,10 @@
     <div id="chart2"></div>
   </section>  
   <section>
+    <header><h1>入库 - 出库(m^3/s)</h1></header>
+    <div id="chart6"></div>
+  </section>  
+  <section>
     <header><h1>下游水位(m)</h1></header>
     <div id="chart3"></div>
   </section>  
@@ -30,10 +34,6 @@
     <header><h1>三峡出库(m^3/s)</h1></header>
     <div id="chart5"></div>
   </section>
-  <section>
-    <header><h1>入库 - 出库(m^3/s)</h1></header>
-    <div id="chart6"></div>
-  </section>  
 </body>
 
 <!-- Load c3.css -->
@@ -113,7 +113,7 @@ const chartCommon = function(data, type, bind, ymin, ymax){
   if(flg){
     dataN2 = data[5].split(',');
   }
-  var chart = c3.generate({
+  const chart = c3.generate({
     bindto: bind,
     data:{
       x:'x',
@@ -136,9 +136,6 @@ const chartCommon = function(data, type, bind, ymin, ymax){
     }
   });
 
-  chart.unload({
-      ids:['dummy']
-  });
   for(var i=0, pos=0; pos<n;i++){
     year = 2012 + i;
     leap = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 1 : 0;
@@ -172,21 +169,21 @@ axios.get('./data2.csv')
     //console.log(response);
     data = response.data.split('\n');
     chart1(data);
-    setTimeout(function () {
+    //setTimeout(function () {
       chartCommon(data, 2, '#chart2', 145, 180);
-    }, 100);
-    setTimeout(function () {
+    //}, 100);
+    //setTimeout(function () {
       chartCommon(data, 3, '#chart3', 63, 73);
-    }, 200);
-    setTimeout(function () {
+    //}, 200);
+    //setTimeout(function () {
       chartCommon(data, 4, '#chart4', 5000, 50000);
-    }, 300);
-    setTimeout(function () {
+    //}, 300);
+    //setTimeout(function () {
       chartCommon(data, 5, '#chart5', 5000, 50000);
-    }, 400);
-    setTimeout(function () {
+    //}, 400);
+    //setTimeout(function () {
       chartCommon(data, 99, '#chart6', -10000, 20000);
-    }, 500);
+    //}, 500);
   })
   .catch(function (error) {
     // handle error
