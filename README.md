@@ -43,3 +43,14 @@ python3 03_getdata.py
 
 you will get `data.json` as output
 
+### step4
+
+fix date format, then you got `data2.json`, and `data2.csv`
+```
+python3 04_cleardata.py
+```
+
+### c3
+
+- json should use double quote
+

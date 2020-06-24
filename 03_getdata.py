@@ -3,8 +3,9 @@
 import urllib.request, urllib.error
 from bs4 import BeautifulSoup
 import os
+import json
 
-def getheader(name, data):
+def getdatafromhtml(name, data):
   with open(name) as f:
     print(name)
     soup = BeautifulSoup(f, "html5lib")
@@ -45,16 +46,16 @@ def getheader(name, data):
       #else:
         #print(tr)
 
-
 if __name__ == '__main__':
   data = {}
   base = os.path.abspath(os.path.dirname(__file__))
   path = os.path.join(base, "html")
-  name = "1.html"
+  #name = "1.html"
+  #getdatafromhtml(os.path.join(path, name), data)
   for name in os.listdir(path):
     if name.endswith(".html"):
-      getheader(os.path.join(path, name), data)
-  #getheader(os.path.join(path, name), data)
+      getdatafromhtml(os.path.join(path, name), data)
 
   with open(os.path.join(base, 'data.json'), 'w') as f:
-    print(data, file=f)
+    print(json.dumps(data), file=f)
+
