@@ -136,6 +136,7 @@ const chartCommon = function(data, type, bind, ymin, ymax){
     }
   });
 
+  var columns = [x];
   for(var i=0, pos=0; pos<n;i++){
     year = 2012 + i;
     leap = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 1 : 0;
@@ -150,14 +151,12 @@ const chartCommon = function(data, type, bind, ymin, ymax){
     yeardata.unshift(String(year));
     pos = pos + yearlen;
 
-    chart.load({
-      columns:[
-        x,
-        yeardata
-      ]
+    columns.push(yeardata);
+  };
+  chart.load({
+    columns
     })
 
-  }
 };
 
 
