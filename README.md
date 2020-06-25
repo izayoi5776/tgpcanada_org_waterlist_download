@@ -55,6 +55,12 @@ fix date format, then you got `data2.json`, and `data2.csv`
 python3 04_cleardata.py
 ```
 
+### step5
+run update every day
+```
+python3 05_update.py
+```
+
 ### use c3 to load and show 
 
 - json should use double quote

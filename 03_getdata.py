@@ -5,10 +5,14 @@ from bs4 import BeautifulSoup
 import os
 import json
 
-def getdatafromhtml(name, data):
+
+def getHtml(name):
   with open(name) as f:
     print(name)
     soup = BeautifulSoup(f, "html5lib")
+    return soup
+
+def getDataFromSoup(soup, data):
     for tr in soup.select('tr'):
       tds = tr.select('td')
       if len(tds) == 1:           
@@ -54,7 +58,8 @@ if __name__ == '__main__':
   #getdatafromhtml(os.path.join(path, name), data)
   for name in os.listdir(path):
     if name.endswith(".html"):
-      getdatafromhtml(os.path.join(path, name), data)
+      soup = getHtml(os.path.join(path, name))
+      getDataFromSoup(soup, data)
 
   with open(os.path.join(base, 'data.json'), 'w') as f:
     print(json.dumps(data), file=f)
