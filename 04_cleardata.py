@@ -64,22 +64,29 @@ def fixDataLost(data2, fmt):
   keys.sort()
   dt = date(datetime.strptime(keys[0], fmt).year, 1, 1)
   end  = datetime.strptime(keys[len(keys)-1], fmt).date()
-  last = [-1, 0, 0, 0, 0]
-  while dt < end:
+  last = [-1, 0, 0, 0, 0, '1234']
+  while dt <= end:
     key = dt.strftime(fmt)
     if key in data2:
-      if data2[key][1] == 0:
+      if len(data2[key])==5:
+        data2[key].append('')
+      if data2[key][1] == 0 and last[1]!=0:
         data2[key][1] = last[1]
-      if data2[key][2] == 0:
+        data2[key][5] = data2[key][5] + '1'
+      if data2[key][2] == 0 and last[2]!=0:
         data2[key][2] = last[2]
-      if data2[key][3] == 0:
+        data2[key][5] = data2[key][5] + '2'
+      if data2[key][3] == 0 and last[3]!=0:
         data2[key][3] = last[3]
-      if data2[key][4] == 0:
+        data2[key][5] = data2[key][5] + '3'
+      if data2[key][4] == 0 and last[4]!=0:
         data2[key][4] = last[4]
+        data2[key][5] = data2[key][5] + '4'
       last = data2[key]
     else:
       data2[key] = last
       data2[key][0] = -1
+      data2[key][5] = '1234'
 
 
     dt = dt + timedelta(days=1)
@@ -88,7 +95,7 @@ def saveData(data2):
   '''
   # OUTPUT data2.json FORMAT
   {
-    "yyyy-mm-dd": [水情信息回次, 上游水位, 下游水位, 三峡入库, 三峡出库],
+    "yyyy-mm-dd": [水情信息回次, 上游水位, 下游水位, 三峡入库, 三峡出库, 修正数据标记],
   }
   '''
   keys = list(data2.keys())
@@ -124,7 +131,7 @@ if __name__ == '__main__':
   fmt = '%Y-%m-%d'
 
   fixDataAfter941(data, data2, fmt)
-  fixDataBefore941(data, data2)
+  fixDataBefore941(data, data2, fmt)
   fixDataLost(data2, fmt)
   saveData(data2)
 
