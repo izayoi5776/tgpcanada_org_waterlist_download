@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <link rel="shortcut icon" type="image/x-icon" href="https://github.com/favicon.ico">
+  <head>
+    <meta charset="UTF-8">
+    <title>三峡水量数据分析</title>
+  </head>
+
+<body>
+  <section>
+    <header><h1>截面积</h1></header>
+    <div id="chart1"></div>
+    <footer><a href="http://tgpcanada.org/waterlist.aspx">数据来源</a>
+       <a href="https://izayoi5776.github.io/tgpcanada_org_waterlist_download/">数据发布</a>
+       <a href="https://github.com/izayoi5776/tgpcanada_org_waterlist_download">数据整形工具</a>
+    </footer>
+  </section>
+</body>
+
+<!-- Load c3.css -->
+<link href="https://unpkg.com/c3@0.7.2/c3.min.css" rel="stylesheet">
+<!-- Load d3.js and c3.js -->
+<script src="https://unpkg.com/d3" charset="utf-8"></script>
+<script src="https://unpkg.com/c3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+const chart1 = function(){
+  var chart = c3.generate({
+    bindto: '#chart1',
+    data:{
+      x:'x',
+      url:'data3.csv',
+      type:'scatter'
+    },
+    point: {
+      show: false
+    },
+    axis:{
+      x:{
+        max: 175,
+        min: 145
+      },
+      y:{
+        max: 5000
+      }
+    }
+  });
+};
+
+// ===================== MAIN =======================
+chart1();
+
+</script>
+</html>
