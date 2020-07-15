@@ -35,7 +35,23 @@
     <header><h1>入库 - 出库(m^3/s)</h1></header>
     <div id="chart6"></div>
   </section>  
+  <section>
+    <header><h1>累计入库（单位：10亿立方米）</h1></header>
+    <div id="chart9"></div>
+    <div>累计入库360到450</div>
+  </section>  
+  <section>
+    <header><h1>累计出库（单位：10亿立方米）</h1></header>
+    <div id="chart8"></div>
+    <div>累计出库380到490，宜昌2007年径流量<a href="http://www.cjw.gov.cn/UploadFiles/zwzc/2015/7/2007nsgb.pdf">436.4</a>十亿立方米 ，计算基本合理。长江口入海流量为<a href="http://www.irtces.org/nszx/nssjk/webinfo/2015/04/1429845454168831.htm">28400</a>m^3/s, 乘86400秒，乘365日 等于895.62 十亿立方米。</div>
+  </section>  
+  <section>
+    <header><h1>累计净排水量（年初为0，∑(入出库*86400)，正为蓄水负为排水，单位：10亿立方米）</h1></header>
+    <div id="chart7"></div>
+    <div>上图，每年年末年始的水位都差不多是175米，净排水量，也应该恢复到0才对，为什么每年都是负的呢？哪里弄错了？</div>
+  </section>  
 </body>
+
 
 <!-- Load c3.css -->
 <link href="https://unpkg.com/c3@0.7.2/c3.min.css" rel="stylesheet">
@@ -96,14 +112,23 @@ const chart1 = function(data){
     }
   });
 };
-//const chart2 = function(data){
-const chartCommon = function(data, type, bind, ymin, ymax){
-  var flg = false;
-  if(type===99){
-    // means 入库 - 出库
-    type = 4;
-    flg = true;
+
+/**
+ * dtype 绘图类型：99入库减出库， 98年初累计水量， 97累计出库， 96累计入库
+*/
+const chartCommon = function(data, dtype, bind, ymin, ymax){
+  var type = dtype;
+  switch(dtype){
+    case 99:  // 入库 - 出库
+    case 98:  // 年初累计水量
+    case 96:  // 累计入库
+      type = 4;   // 4 是入库流速
+      break;
+    case 97:  // 累计出库
+      type = 5;
+      break;
   }
+
   // 2012，2016，2020 are leap year
   data0 = data[0].split(',');
   //x = data0.slice(0, 366).map(x => x.substr(5));
@@ -111,8 +136,8 @@ const chartCommon = function(data, type, bind, ymin, ymax){
   x.unshift('x');
   dataN = data[type].split(',');
   n = dataN.length;
-  if(flg){
-    dataN2 = data[5].split(',');
+  if(dtype===99 || dtype===98){
+    dataN2 = data[5].split(',');  // 5 是出库流速
   }
   const chart = c3.generate({
     bindto: bind,
@@ -137,16 +162,27 @@ const chartCommon = function(data, type, bind, ymin, ymax){
     }
   });
 
+  // 按年插入数据
   var columns = [x];
   for(var i=0, pos=0; pos<n;i++){
     year = 2012 + i;
-    leap = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 1 : 0;
+    leap = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 1 : 0; // 闰年=1
     yearlen = 365+leap;
     yeardata = dataN.slice(pos, pos+yearlen);
-    if(flg){
+    // 流速差，累计水量计算
+    if(dtype===99 || dtype===98){
       yeardata2 = dataN2.slice(pos, pos+yearlen);
       for(var j=0; j<yearlen; j++){
-        yeardata[j] = yeardata[j] - yeardata2[j];
+        yeardata[j] = yeardata[j] - yeardata2[j];   // 流速差
+      }
+    }
+    if(dtype===98 || dtype===97 || dtype===96){
+      // 累计水量
+      var sum = 0; // 年初是0
+      for(var j=1; j<yearlen; j++){
+        var sumLast = sum;
+        sum += yeardata[j-1] * 86400 / 1000000000;  // 前一天的净流速 * 1天秒数 / 10亿
+        yeardata[j-1] = sumLast;
       }
     }
     yeardata.unshift(String(year));
@@ -184,6 +220,9 @@ axios.get('./data2.csv')
     //setTimeout(function () {
       chartCommon(data, 99, '#chart6', -10000, 20000);
     //}, 500);
+      chartCommon(data, 98, '#chart7', -60, 0);
+      chartCommon(data, 97, '#chart8', 0, 500);
+      chartCommon(data, 96, '#chart9', 0, 500);
   })
   .catch(function (error) {
     // handle error
