@@ -23,7 +23,8 @@
               <p class="text-left">
               悬停在曲线上：显示数字<br>
               悬停在图例上：强调显示<br>
-              点击图例：切换显示
+              点击图例：切换显示<br>
+              ※删除了2/29以对齐数据
               </p>
           </div>        
         '>?</button>
@@ -164,7 +165,7 @@ const chartCommon = function(data, dtype, bind, ymin, ymax){
   // 2012，2016，2020 are leap year
   data0 = data[0].split(',');
   //x = data0.slice(0, 366).map(x => x.substr(5));
-  x = data0.slice(0, 366);
+  x = data0.slice(366, 731);  // 用 2013 年的日期为 x 轴，避开闰日
   x.unshift('x');
   dataN = data[type].split(',');
   n = dataN.length;
@@ -219,6 +220,11 @@ const chartCommon = function(data, dtype, bind, ymin, ymax){
     }
     yeardata.unshift(String(year));
     pos = pos + yearlen;
+
+    // 删除闰年2/29的数据，让日期对齐
+    if(leap){
+      yeardata.splice(60,1);
+    }
 
     columns.push(yeardata);
   };
