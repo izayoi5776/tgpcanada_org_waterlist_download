@@ -14,13 +14,27 @@
     <div class="row bg-info text-light">
       <div class="col">
         <a class="text-light m-2" href="https://izayoi5776.github.io/tgpcanada_org_waterlist_download/"> 本站 </a>
-        <a class="text-light m-2" href="http://tgpcanada.org/waterlist.aspx"> 数据源 </a>
-        <a class="text-light m-2" href="https://github.com/izayoi5776/tgpcanada_org_waterlist_download"> github </a>
+        <a class="text-light m-2" href="http://tgpcanada.org/waterlist.aspx" target="_blank"> 数据源 </a>
+        <a class="text-light m-2" href="https://github.com/izayoi5776/tgpcanada_org_waterlist_download" target="_blank"> github </a>
+        <button type="button" class="btn btn-info" data-toggle="tooltip" data-html="true" title='
+          <div>
+              <p class="h5">利用方法</p>
+              <hr class="bg-white">
+              <p class="text-left">
+              悬停在曲线上：显示数字<br>
+              悬停在图例上：强调显示<br>
+              点击图例：切换显示
+              </p>
+          </div>        
+        '>?</button>
       </div>
       <div class="col text-right">
         数据最后更新时间: <p id="lastmodified" class="d-inline">-</p>
       </div>
     </div>
+
+
+
   </header>
   <section>
     <header><h1>三峡水情数据(全期)</h1></header>
@@ -65,9 +79,18 @@
 
 
 <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/d3" charset="utf-8"></script>
 <script src="https://unpkg.com/c3"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+// enable tootips
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 <script>
 
 const chart1 = function(data){
