@@ -11,7 +11,7 @@
 
 <body>
   <header class="container-fluid">
-    <div class="row bg-info text-light">
+    <div class="row bg-info text-light align-baseline">
       <div class="col">
         <a class="text-light m-2" href="https://izayoi5776.github.io/tgpcanada_org_waterlist_download/" data-toggle="tooltip" title="本页面" > 本站 </a>
         <a class="text-light m-2" href="http://tgpcanada.org/waterlist.aspx" target="_blank" data-toggle="tooltip" title="数据源网站" > 数据源 </a>
@@ -29,12 +29,8 @@
           </div>        
         '>?</button>
       </div>
-      <div class="col text-right">
-        数据最后更新时间: <p id="lastmodified" class="d-inline">-</p>
-      </div>
+      <div class="col text-right m-2">数据最后更新时间: <p id="lastmodified" class="d-inline font-italic">-</p></div>
     </div>
-
-
 
   </header>
   <section>
@@ -232,36 +228,30 @@ const chartCommon = function(data, dtype, bind, ymin, ymax){
     columns
     })
 
+  return chart;
 };
 
 
 // ===================== MAIN =======================
 var data;
+var chart2, chart3, chart4, chart5, chart6, chart7, chart8, chart9;
 axios.get('./data2.csv')
   .then(function (response) {
     // handle success
     //console.log(response.headers["last-modified"]);
     $("#lastmodified").text(response.headers["last-modified"])
     data = response.data.split('\n');
+
     chart1(data);
-    //setTimeout(function () {
-      chartCommon(data, 2, '#chart2', 145, 180);
-    //}, 100);
-    //setTimeout(function () {
-      chartCommon(data, 3, '#chart3', 63, 73);
-    //}, 200);
-    //setTimeout(function () {
-      chartCommon(data, 4, '#chart4', 5000, 50000);
-    //}, 300);
-    //setTimeout(function () {
-      chartCommon(data, 5, '#chart5', 5000, 50000);
-    //}, 400);
-    //setTimeout(function () {
-      chartCommon(data, 99, '#chart6', -10000, 20000);
-    //}, 500);
-      chartCommon(data, 98, '#chart7', -60, 0);
-      chartCommon(data, 97, '#chart8', 0, 500);
-      chartCommon(data, 96, '#chart9', 0, 500);
+
+    chart2 = chartCommon(data, 2, '#chart2', 145, 180);
+    chart3 = chartCommon(data, 3, '#chart3', 63, 73);
+    chart4 = chartCommon(data, 4, '#chart4', 5000, 50000);
+    chart5 = chartCommon(data, 5, '#chart5', 5000, 50000);
+    chart6 = chartCommon(data, 99, '#chart6', -10000, 20000);
+    chart7 = chartCommon(data, 98, '#chart7', -60, 0);
+    chart8 = chartCommon(data, 97, '#chart8', 0, 500);
+    chart9 = chartCommon(data, 96, '#chart9', 0, 500);
   })
   .catch(function (error) {
     // handle error
