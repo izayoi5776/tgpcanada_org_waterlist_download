@@ -38,39 +38,40 @@
     <div id="chart1"></div>
   </section>
   <section>
-    <header><h1>上游水位(m)</h1></header>
+    <header><h1>上游水位($m$)</h1></header>
     <div id="chart2"></div>
   </section>  
   <section>
-    <header><h1>下游水位(m)</h1></header>
+    <header><h1>下游水位($m$)</h1></header>
     <div id="chart3"></div>
   </section>  
   <section>
-    <header><h1>三峡入库(m^3/s)</h1></header>
+    <header><h1>三峡入库($m^3/s$)</h1></header>
     <div id="chart4"></div>
   </section>  
   <section>
-    <header><h1>三峡出库(m^3/s)</h1></header>
+    <header><h1>三峡出库($m^3/s$)</h1></header>
     <div id="chart5"></div>
   </section>
   <section>
-    <header><h1>入库 - 出库(m^3/s)</h1></header>
+    <header><h1>入库 - 出库($m^3/s$)</h1></header>
     <div id="chart6"></div>
   </section>  
   <section>
-    <header><h1>累计入库（单位：10亿立方米）</h1></header>
+    <header><h1>累计入库（单位：10亿$m^3$）</h1></header>
     <div id="chart9"></div>
     <div>累计入库360到450</div>
   </section>  
   <section>
-    <header><h1>累计出库（单位：10亿立方米）</h1></header>
+    <header><h1>累计出库（单位：10亿$m^3$）</h1></header>
     <div id="chart8"></div>
     <div>累计出库380到490，宜昌2007年径流量<a href="http://www.cjw.gov.cn/UploadFiles/zwzc/2015/7/2007nsgb.pdf">436.4</a>十亿立方米 ，计算基本合理。长江口入海流量为<a href="http://www.irtces.org/nszx/nssjk/webinfo/2015/04/1429845454168831.htm">28400</a>m^3/s, 乘86400秒，乘365日 等于895.62 十亿立方米。</div>
   </section>  
   <section>
-    <header><h1>累计净排水量（年初为0，∑(入出库*86400)，正为蓄水负为排水，单位：10亿立方米）</h1></header>
+    <header><h1>累计净排水量（单位：10亿$m^3$）</h1></header>
     <div id="chart7"></div>
-    <div>上图，每年年末年始的水位都差不多是175米，净排水量，也应该恢复到0才对，为什么每年都是负的呢？哪里弄错了？</div>
+
+    <div>$\sum_{年初=0}^{当日}{(入库 - 出库)}$，正为蓄水负为排水。<br>上图，每年年末年始的水位都差不多是175米，净排水量，也应该恢复到0才对，为什么每年都是负的呢？哪里弄错了？</div>
   </section>  
 </body>
 
@@ -88,6 +89,22 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
 </script>
+
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
 <script>
 
 const chart1 = function(data){
