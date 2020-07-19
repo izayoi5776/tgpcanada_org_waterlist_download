@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="shortcut icon" type="image/x-icon" href="https://github.com/favicon.ico">
+  <link href="https://unpkg.com/c3@0.7.2/c3.min.css" rel="stylesheet">
+
   <head>
     <meta charset="UTF-8">
     <title>三峡水量数据</title>
   </head>
 
 <body>
+  <header class="container-fluid">
+    <div class="row bg-info text-light">
+      <div class="col">
+        <a class="text-light m-2" href="https://izayoi5776.github.io/tgpcanada_org_waterlist_download/"> 本站 </a>
+        <a class="text-light m-2" href="http://tgpcanada.org/waterlist.aspx"> 数据源 </a>
+        <a class="text-light m-2" href="https://github.com/izayoi5776/tgpcanada_org_waterlist_download"> github </a>
+      </div>
+      <div class="col text-right">
+        数据最后更新时间: <p id="lastmodified" class="d-inline">-</p>
+      </div>
+    </div>
+  </header>
   <section>
     <header><h1>三峡水情数据(全期)</h1></header>
     <div id="chart1"></div>
-    <footer><a href="http://tgpcanada.org/waterlist.aspx">数据来源</a>
-       <a href="https://izayoi5776.github.io/tgpcanada_org_waterlist_download/">数据发布</a>
-       <a href="https://github.com/izayoi5776/tgpcanada_org_waterlist_download">数据整形工具</a>
-    </footer>
   </section>
   <section>
     <header><h1>上游水位(m)</h1></header>
@@ -53,9 +64,7 @@
 </body>
 
 
-<!-- Load c3.css -->
-<link href="https://unpkg.com/c3@0.7.2/c3.min.css" rel="stylesheet">
-<!-- Load d3.js and c3.js -->
+<script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
 <script src="https://unpkg.com/d3" charset="utf-8"></script>
 <script src="https://unpkg.com/c3"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -202,7 +211,8 @@ var data;
 axios.get('./data2.csv')
   .then(function (response) {
     // handle success
-    //console.log(response);
+    //console.log(response.headers["last-modified"]);
+    $("#lastmodified").text(response.headers["last-modified"])
     data = response.data.split('\n');
     chart1(data);
     //setTimeout(function () {
